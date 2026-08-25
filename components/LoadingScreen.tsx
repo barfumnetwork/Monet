@@ -39,11 +39,11 @@ export default function LoadingScreen() {
     >
       <div className="loading-screen__inner">
         <div className="loading-screen__logo">LUMEN</div>
-        <div className="loading-screen__caption">Preparing your network</div>
+        <div className="loading-screen__caption">Dein Netzwerk wird vorbereitet</div>
         <div className="loading-screen__bar" aria-hidden>
           <div className="loading-screen__bar-fill" />
         </div>
-        <span className="sr-only">Loading network experience</span>
+        <span className="sr-only">Netzwerk-Erlebnis wird geladen</span>
       </div>
     </div>
   );

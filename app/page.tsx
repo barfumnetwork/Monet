@@ -21,7 +21,7 @@ export default function Page() {
       </main>
       <footer className="relative z-10 py-12 px-[8vw] text-xs text-ink/50 flex justify-between">
         <span>© LUMEN Optics</span>
-        <span>Press · Support · Privacy</span>
+        <span>Presse · Support · Datenschutz</span>
       </footer>
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -25,17 +26,40 @@ type NetworkModelProps = { isMobile: boolean };
 
 export default function NetworkModel({ isMobile }: NetworkModelProps) {
   const groupRef = useRef<THREE.Group>(null);
+  // Inner "liquid" wrapper — carries a small reactive wobble driven by
+  // scroll velocity, layered on top of the GSAP-driven outer transform,
+  // so the hologram feels like it's responding to the scroll itself
+  // (a gentle water-like ripple) rather than just tweening between poses.
+  const liquidRef = useRef<THREE.Group>(null);
+  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
-  // Node/connection budget — kept well inside the performance targets
-  // (desktop ≤250 nodes, mobile ≤140 nodes).
   const nodeCount = isMobile ? 120 : 220;
 
-  // The sphere geometry itself is static; only the surrounding group's
-  // transform is animated (position/rotation/scale) via GSAP below.
   const sphere = useMemo(
     () => <NetworkSphere nodeCount={nodeCount} radius={1} maxConnectionsPerNode={3} connectionDistance={0.55} />,
     [nodeCount]
   );
+
+  useFrame(({ clock }) => {
+    const g = liquidRef.current;
+    if (!g) return;
+    const t = clock.getElapsedTime();
+    // Constant gentle floating/breathing motion — present even without
+    // any scrolling, so the hologram never looks static.
+    const floatY = Math.sin(t * 0.5) * 0.03;
+    const floatWobble = Math.sin(t * 0.35) * 0.02;
+
+    // Scroll-velocity reactive tilt: the faster the user scrolls, the
+    // more the hologram "leans"/ripples, then eases back — the closest
+    // approximation to a liquid response without adding a physics lib.
+    const st = scrollTriggerRef.current;
+    const velocity = st ? st.getVelocity() : 0;
+    const targetTilt = THREE.MathUtils.clamp(velocity / 2500, -0.22, 0.22);
+
+    g.position.y = floatY;
+    g.rotation.z = THREE.MathUtils.lerp(g.rotation.z, targetTilt + floatWobble, 0.06);
+    g.rotation.x = THREE.MathUtils.lerp(g.rotation.x, targetTilt * 0.4, 0.06);
+  });
 
   useLayoutEffect(() => {
     const g = groupRef.current;
@@ -50,9 +74,6 @@ export default function NetworkModel({ isMobile }: NetworkModelProps) {
       const yOffset = isMobile ? 0.3 : 0;
       const hero = NETWORK_STATES[0];
 
-      // Start pose set synchronously (pre-paint) so there's no flash of
-      // an unpositioned sphere. Intro is rotation-only from an offset
-      // start angle into the hero pose — no position slide.
       g.position.set(hero.position[0] * ps, hero.position[1] * ps + yOffset, hero.position[2] * ps);
       g.rotation.set(hero.rotation[0], hero.rotation[1] - 1.6, hero.rotation[2]);
       g.scale.setScalar(hero.scale * ss);
@@ -69,8 +90,8 @@ export default function NetworkModel({ isMobile }: NetworkModelProps) {
 
       cancelIntroSub = onIntroStart(() => intro.play());
 
-      // Slow, restrained turntable reveal — no hectic spin, no position
-      // animation, matching the brief's "elegant and slow" requirement.
+      // Slow, restrained turntable reveal — elegant, no hectic spin, no
+      // position animation during the reveal itself.
       intro.to(g.rotation, { y: hero.rotation[1], duration: 3.6, ease: "sine.inOut" }, 0);
 
       intro.to(
@@ -105,6 +126,7 @@ export default function NetworkModel({ isMobile }: NetworkModelProps) {
             .to(group.rotation, { x: next.rotation[0], y: next.rotation[1], z: next.rotation[2] }, at)
             .to(group.scale, { x: next.scale * ss, y: next.scale * ss, z: next.scale * ss }, at);
         }
+        if (tl.scrollTrigger) scrollTriggerRef.current = tl.scrollTrigger;
         ScrollTrigger.refresh();
       }
     });
@@ -123,7 +145,7 @@ export default function NetworkModel({ isMobile }: NetworkModelProps) {
 
   return (
     <group ref={groupRef} dispose={null}>
-      {sphere}
+      <group ref={liquidRef}>{sphere}</group>
     </group>
   );
 }

@@ -7,11 +7,11 @@ export default function Header() {
         LUMEN
       </a>
       <nav className="pointer-events-auto hidden md:flex items-center gap-10 text-sm text-ink/80">
-        <a href="#features" className="hover:text-ink transition-colors">Features</a>
-        <a href="#experience" className="hover:text-ink transition-colors">Experience it</a>
-        <a href="#buy" className="hover:text-ink transition-colors font-medium">Buy now</a>
+        <a href="#features" className="hover:text-ink transition-colors">Vorteile</a>
+        <a href="#experience" className="hover:text-ink transition-colors">Erlebnis</a>
+        <a href="#buy" className="hover:text-ink transition-colors font-medium">Jetzt beitreten</a>
       </nav>
-      <button type="button" aria-label="Open menu"
+      <button type="button" aria-label="Menü öffnen"
         className="pointer-events-auto md:hidden flex flex-col gap-1.5 p-2">
         <span className="block h-[2px] w-6 bg-ink" />
         <span className="block h-[2px] w-6 bg-ink" />
