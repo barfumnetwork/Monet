@@ -118,11 +118,11 @@ export default function NetworkSphere({
     nodesGeometry.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
 
     const nodesMaterial = new THREE.PointsMaterial({
-      size: radius * 0.06,
+      size: radius * 0.075,
       map: glowTexture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.95,
+      opacity: 1,
       sizeAttenuation: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -152,7 +152,7 @@ export default function NetworkSphere({
     const linesMaterial = new THREE.LineBasicMaterial({
       color: "#8fd6ff",
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.55,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -170,11 +170,11 @@ export default function NetworkSphere({
     const particlesGeometry = new THREE.BufferGeometry();
     particlesGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
     const particlesMaterial = new THREE.PointsMaterial({
-      size: radius * 0.03,
+      size: radius * 0.038,
       map: glowTexture,
       color: "#bfeaff",
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.6,
       sizeAttenuation: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -203,12 +203,12 @@ export default function NetworkSphere({
     if (coreRef.current) {
       coreRef.current.scale.setScalar(radius * (0.42 + Math.sin(t * 0.9) * 0.05));
       const mat = coreRef.current.material as THREE.MeshBasicMaterial;
-      mat.opacity = 0.35 + Math.sin(t * 0.9) * 0.12;
+      mat.opacity = 0.5 + Math.sin(t * 0.9) * 0.15;
     }
     if (haloRef.current) {
       haloRef.current.scale.setScalar(radius * (2.6 + Math.sin(t * 0.6) * 0.25));
       const mat = haloRef.current.material as THREE.SpriteMaterial;
-      mat.opacity = 0.22 + Math.sin(t * 0.6) * 0.08;
+      mat.opacity = 0.38 + Math.sin(t * 0.6) * 0.12;
     }
 
     // --- Water-touch: displace nodes near each active ripple ---
@@ -277,7 +277,7 @@ export default function NetworkSphere({
         <spriteMaterial
           map={glowTexture}
           transparent
-          opacity={0.22}
+          opacity={0.38}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           color="#ff8f7a"
@@ -289,7 +289,7 @@ export default function NetworkSphere({
         <meshBasicMaterial
           color="#ff5548"
           transparent
-          opacity={0.35}
+          opacity={0.5}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />

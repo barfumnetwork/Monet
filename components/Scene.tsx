@@ -23,8 +23,10 @@ export default function Scene() {
       }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.1;
         gl.outputColorSpace = THREE.SRGBColorSpace;
+        // Slightly hotter exposure now that the backdrop is dark — the
+        // additive glow has room to bloom without clipping to white.
+        gl.toneMappingExposure = isMobile ? 1.25 : 1.35;
       }}
     >
       <PerspectiveCamera makeDefault position={[0, 0, 4.5]} fov={32} />

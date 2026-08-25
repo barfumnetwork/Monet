@@ -4,7 +4,7 @@ const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      colors: { canvas: "#f3f3f3", ink: "#0a0a0a", accent: "#ff3b30" },
+      colors: { canvas: "#060910", ink: "#f2f6ff", accent: "#ff5548" },
       fontFamily: {
         sans: [
           "-apple-system",

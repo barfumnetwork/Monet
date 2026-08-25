@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f3f3f3;
-  --ink: #0a0a0a;
-  --accent: #ff3b30;
+  /* Dark theme: additive/glow blending only reads against a dark
+     backdrop — on a light background every glow washes out to white. */
+  --bg: #060910;
+  --ink: #f2f6ff;
+  --accent: #ff5548;
 }
 
 html,
@@ -47,10 +49,12 @@ body {
 @media (max-width: 1024px) {
   /* MOBILE + TABLET LAYOUT — text TOP, camera MIDDLE (canvas pinned
      to 30-72vh band), text/CTA BOTTOM. Single vertical composition. */
+  /* Canvas covers the FULL viewport on mobile too — the hologram is no
+     longer boxed into a band, so the sphere is never visually cropped. */
   .scene-fixed {
-    top: 30vh;
-    bottom: auto;
-    height: 42vh;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
   }
 
   .section {
@@ -64,7 +68,7 @@ body {
      eyebrow + headline sit above, paragraph + CTA fall below, and the
      fixed canvas overlays the gap in between. */
   .section :is(h1, h2) {
-    margin-bottom: 42vh;
+    margin-bottom: 26vh;
   }
 
   /* Final section override: no big spacer between headline and button
@@ -75,7 +79,7 @@ body {
 
   /* Push the final section's text block below the canvas zone. */
   [data-section="final"] > div:first-child {
-    margin-top: 60vh;
+    margin-top: 30vh;
   }
 }
 
@@ -105,7 +109,7 @@ body {
   letter-spacing: 0.18em;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(10, 10, 10, 0.55);
+  color: rgba(242, 246, 255, 0.6);
 }
 
 .cta {
@@ -161,7 +165,7 @@ body {
 .loading-screen__caption {
   margin-top: 14px;
   font-size: 11px;
-  color: rgba(10, 10, 10, 0.5);
+  color: rgba(242, 246, 255, 0.55);
   text-transform: uppercase;
   letter-spacing: 0.22em;
 }
@@ -171,7 +175,7 @@ body {
   margin-top: 18px;
   width: 180px;
   height: 1px;
-  background: rgba(10, 10, 10, 0.08);
+  background: rgba(242, 246, 255, 0.12);
   overflow: hidden;
 }
 
@@ -203,4 +207,41 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Because the canvas now spans the full viewport behind every section,
+   text blocks get their own soft backdrop so they stay readable over the
+   brightest parts of the hologram. Radial rather than a hard box, so it
+   reads as atmosphere instead of a panel. */
+.section > div {
+  position: relative;
+}
+
+.section > div::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(6, 9, 16, 0.82) 0%,
+    rgba(6, 9, 16, 0.55) 45%,
+    rgba(6, 9, 16, 0) 75%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Subtle vignette over the whole page — deepens the edges so the
+   hologram's glow has somewhere dark to fall off into. */
+.section-stack::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(6, 9, 16, 0) 35%,
+    rgba(6, 9, 16, 0.75) 100%
+  );
 }
