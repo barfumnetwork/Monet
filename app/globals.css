@@ -140,12 +140,57 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 1;
-  transition: opacity 0.5s ease;
 }
 
+/* Exit choreography: the logo spins up like a wheel (slow at first,
+   then accelerating — the acceleration is baked into the keyframe
+   spacing, so the timing function stays linear to avoid double easing)
+   and is finally flung off to the left. Size never changes.
+   Caption and bar drop out early so the logo carries the exit alone.
+   Pure CSS on purpose: importing GSAP here would pull it into the
+   initial bundle and undo SceneClient's code split. */
 .loading-screen--hidden {
-  opacity: 0;
   pointer-events: none;
+  animation: loading-veil-out 0.45s ease 1.15s forwards;
+}
+
+.loading-screen--hidden .loading-screen__logo-img {
+  animation: logo-spin-exit 1.6s linear forwards;
+}
+
+.loading-screen--hidden .loading-screen__caption,
+.loading-screen--hidden .loading-screen__bar {
+  animation: loading-aux-out 0.3s ease forwards;
+}
+
+@keyframes logo-spin-exit {
+  0%   { transform: rotate(0deg)    translateX(0);      opacity: 1; }
+  14%  { transform: rotate(30deg)   translateX(0);      opacity: 1; }
+  30%  { transform: rotate(150deg)  translateX(0);      opacity: 1; }
+  46%  { transform: rotate(420deg)  translateX(0);      opacity: 1; }
+  62%  { transform: rotate(880deg)  translateX(-8vw);   opacity: 1; }
+  78%  { transform: rotate(1500deg) translateX(-40vw);  opacity: 1; }
+  100% { transform: rotate(2600deg) translateX(-150vw); opacity: 0; }
+}
+
+@keyframes loading-aux-out {
+  to { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes loading-veil-out {
+  to { opacity: 0; }
+}
+
+/* Respect reduced-motion: skip the spin, just fade the overlay. */
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen--hidden {
+    animation: loading-veil-out 0.4s ease forwards;
+  }
+  .loading-screen--hidden .loading-screen__logo-img,
+  .loading-screen--hidden .loading-screen__caption,
+  .loading-screen--hidden .loading-screen__bar {
+    animation: none;
+  }
 }
 
 .loading-screen__inner {
@@ -158,6 +203,8 @@ body {
   height: 72px;
   width: auto;
   display: block;
+  transform-origin: center center;
+  will-change: transform, opacity;
 }
 
 .loading-screen__caption {

@@ -22,12 +22,13 @@ export default function LoadingScreen() {
   useEffect(() => {
     if (!networkReady || hidden) return;
     // 1280ms Haltezeit: der Ladebalken bekommt bewusst eine volle
-    // Sweep-Runde mehr, bevor ausgeblendet wird — rein gestalterisch.
+    // Sweep-Runde mehr, bevor die Exit-Choreografie startet.
     const hold = window.setTimeout(() => {
       setHidden(true);
-      // 520ms ≈ matches the CSS opacity transition (0.5s) so introStart
-      // fires the instant the overlay is fully transparent.
-      window.setTimeout(() => markIntroStart(), 520);
+      // 1650ms ≈ Dauer der CSS-Exit-Animation (Logo dreht auf und fliegt
+      // nach links raus, danach blendet der Vorhang ab). Erst dann darf
+      // die Intro-Rotation der Sphäre beginnen.
+      window.setTimeout(() => markIntroStart(), 1650);
     }, 1280);
     return () => window.clearTimeout(hold);
   }, [networkReady, hidden]);
