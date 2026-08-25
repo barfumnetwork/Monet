@@ -21,12 +21,14 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     if (!networkReady || hidden) return;
+    // 1280ms Haltezeit: der Ladebalken bekommt bewusst eine volle
+    // Sweep-Runde mehr, bevor ausgeblendet wird — rein gestalterisch.
     const hold = window.setTimeout(() => {
       setHidden(true);
       // 520ms ≈ matches the CSS opacity transition (0.5s) so introStart
       // fires the instant the overlay is fully transparent.
       window.setTimeout(() => markIntroStart(), 520);
-    }, 280);
+    }, 1280);
     return () => window.clearTimeout(hold);
   }, [networkReady, hidden]);
 
