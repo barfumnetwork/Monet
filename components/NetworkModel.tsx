@@ -34,10 +34,21 @@ export default function NetworkModel({ isMobile }: NetworkModelProps) {
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const nodeCount = isMobile ? 120 : 220;
+  // Energy-stream budget scales down hard on mobile — the ripple maths
+  // already costs per-node work there, so the aura stays cheap.
+  const streamCount = isMobile ? 45 : 110;
 
   const sphere = useMemo(
-    () => <NetworkSphere nodeCount={nodeCount} radius={1} maxConnectionsPerNode={3} connectionDistance={0.55} />,
-    [nodeCount]
+    () => (
+      <NetworkSphere
+        nodeCount={nodeCount}
+        radius={1}
+        maxConnectionsPerNode={3}
+        connectionDistance={0.55}
+        streamCount={streamCount}
+      />
+    ),
+    [nodeCount, streamCount]
   );
 
   useFrame(({ clock }) => {
