@@ -38,7 +38,11 @@ export default function LoadingScreen() {
       aria-live="polite"
     >
       <div className="loading-screen__inner">
-        <div className="loading-screen__logo">LUMEN</div>
+        <img
+          src="/logo.png"
+          alt="BARFÜM NETWORK"
+          className="loading-screen__logo-img"
+        />
         <div className="loading-screen__caption">Dein Netzwerk wird vorbereitet</div>
         <div className="loading-screen__bar" aria-hidden>
           <div className="loading-screen__bar-fill" />

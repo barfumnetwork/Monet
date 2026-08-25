@@ -20,7 +20,7 @@ export default function Page() {
         </div>
       </main>
       <footer className="relative z-10 py-12 px-[8vw] text-xs text-ink/45 flex justify-between">
-        <span>© LUMEN Optics</span>
+        <span>© BARFÜM NETWORK</span>
         <span>Presse · Support · Datenschutz</span>
       </footer>
     </>

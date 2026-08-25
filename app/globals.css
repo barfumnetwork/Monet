@@ -154,12 +154,10 @@ body {
   align-items: center;
 }
 
-.loading-screen__logo {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 32px;
-  letter-spacing: -0.02em;
-  line-height: 1;
+.loading-screen__logo-img {
+  height: 72px;
+  width: auto;
+  display: block;
 }
 
 .loading-screen__caption {
